@@ -1,0 +1,3 @@
+---
+# vars file for roles/hardening
+hardening_packages:

@@ -59,6 +59,16 @@
     name: '{{ hardening_epel_rpm }}' 
     state: present
 
+- name: Update cache
+  ansible.builtin.dnf:
+    update_cache: true
+
+- name: Install Fail2ban
+  ansible.builtin.dnf:
+    name: '{{ hardening_packages }}'
+    state: present
+
+
 - name: Deploy fail2ban jail configuration
   ansible.builtin.template:
     src: hardening.conf.j2

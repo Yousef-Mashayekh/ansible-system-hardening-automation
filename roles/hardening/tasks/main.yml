@@ -20,7 +20,7 @@
 
 - name: Remove disallowed services from firewall
   ansible.posix.firewalld:
-    zone: '{{ hardeing_firewall_zone }}'
+    zone: '{{ hardening_firewall_zone }}'
     service: '{{ item }}'
     permanent: true
     immediate: true
@@ -33,7 +33,7 @@
   ansible.posix.selinux:
     state: '{{ hardening_selinux_state }}' 
     policy: '{{ hardening_selinux_policy }}'
-    register: selinux_result
+  register: selinux_result
 
 - name: Reboot if SELinux mode changed
   ansible.builtin.reboot:

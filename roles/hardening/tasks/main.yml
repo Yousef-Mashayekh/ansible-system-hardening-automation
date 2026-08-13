@@ -3,12 +3,14 @@
 
 # ── Firewall────────────────────────────────────
 - name: Ensure firewalld is running and enabled
+  tags: [firewall]
   ansible.builtin.service:
     name: firewalld
     state: started
     enabled: true
 
 - name: Allow required services through firewall
+  tags: [firewall]
   ansible.posix.firewalld:
     zone: '{{ hardening_firewall_zone }}'
     service: '{{ item }}'
@@ -19,6 +21,7 @@
   notify: Reload firewalld
 
 - name: Remove disallowed services from firewall
+  tags: [firewall]
   ansible.posix.firewalld:
     zone: '{{ hardening_firewall_zone }}'
     service: '{{ item }}'
@@ -30,18 +33,21 @@
 
 # ── SELinux─────────────────────────────────────
 - name: Set SELinux mode
+  tags: [selinux]
   ansible.posix.selinux:
     state: '{{ hardening_selinux_state }}' 
     policy: '{{ hardening_selinux_policy }}'
   register: selinux_result
 
 - name: Reboot if SELinux mode changed
+  tags: [selinux]
   ansible.builtin.reboot:
      msg: 'Rebooting to apply SELinux mode change'
      reboot_timeout: 300
   when: selinux_result.reboot_required | default(false)
 
 - name: Set SELinux booleans
+  tags: [selinux]
   ansible.posix.seboolean:
     name: '{{ item.name }}'  
     state: '{{ item.state }}'
@@ -50,16 +56,19 @@
 
 # ── fail2ban─────────────────────────────────────
 - name: Import EPEL 9 GPG key
+  tags: [fail2ban]
   ansible.builtin.rpm_key:
     key: '{{ hardening_epel_gpg_key }}'
     state: present
 
 - name: Install EPEL repository
+  tags: [fail2ban]
   ansible.builtin.dnf:
     name: '{{ hardening_epel_rpm }}' 
     state: present
 
 - name: Update cache
+  tags: [fail2ban]
   ansible.builtin.dnf:
     update_cache: true
 

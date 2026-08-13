@@ -1,0 +1,9 @@
+---
+# System Hardening Automation — Full Workflow
+# Run all: ansible-playbook playbooks/site.yml --become
+# Firewall only: ansible-playbook playbooks/site.yml --tags firewall --become
+# SELinux only: ansible-playbook playbooks/site.yml --tags selinux --become
+# fail2ban only: ansible-playbook playbooks/site.yml --tags fail2ban --become
+
+- import_playbook: harden.yml
+
